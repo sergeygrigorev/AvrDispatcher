@@ -13,7 +13,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-uint8_t LcdReady();
 void LcdWriteData(uint8_t cmd);
 void LcdWriteCmd(uint8_t cmd);
 void LcdInit();

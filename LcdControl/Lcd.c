@@ -4,7 +4,6 @@ uint8_t LcdReady()
 {
 	DDDR = 0;
 	DPORT = 255;
-	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	CPORT &= ~((1 << LCDE)|(1 << LCDRS));
 	CPORT |= 1 << LCDRW;
 	_delay_us(125);
@@ -18,7 +17,6 @@ void LcdWriteData(uint8_t cmd)
 {
 	while(LcdReady() == 0);
 	DDDR = 255;
-	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	CPORT &= ~((1 << LCDE)|(1 << LCDRW));
 	CPORT |= 1 << LCDRS;
 	_delay_us(125);
@@ -32,7 +30,6 @@ void LcdWriteCmd(uint8_t cmd)
 {
 	while(LcdReady() == 0);
 	DDDR = 255;
-	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	CPORT &= ~((1 << LCDE)|(1 << LCDRW)|(1 << LCDRS));
 	_delay_us(125);
 	CPORT |= 1 << LCDE;
@@ -43,7 +40,8 @@ void LcdWriteCmd(uint8_t cmd)
 
 void LcdInit()
 {
-	_delay_ms(100);
+	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
+	
 	LcdWriteCmd(0b00111000); // 8-bit, 2 lines, 5x8
 	LcdWriteCmd(0b00000010); // Start position
 	LcdWriteCmd(0b00000001); // Clear
@@ -52,8 +50,7 @@ void LcdInit()
 
 void LcdWriteChar(char c)
 {
-	uint8_t cc = c;
-	LcdWriteData(cc);
+	LcdWriteData(c);
 }
 
 void LcdWrite(char * s)
