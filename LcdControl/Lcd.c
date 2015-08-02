@@ -1,9 +1,3 @@
-/*
- * Lcd.c
- *
- * Created: 15.02.2015 20:34:30
- *  Author: Odmin
- */ 
 #include "Lcd.h"
 
 uint8_t LcdReady()

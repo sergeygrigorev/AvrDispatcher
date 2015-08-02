@@ -1,11 +1,3 @@
-/*
- * Lcd.h
- *
- * Created: 15.02.2015 22:26:24
- *  Author: Odmin
- */ 
-
-
 #ifndef LCD_H_
 #define LCD_H_
 
