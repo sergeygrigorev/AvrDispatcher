@@ -2,54 +2,43 @@
 
 uint8_t LcdReady()
 {
-	//_delay_ms(1);
 	DDDR = 0;
 	DPORT = 255;
 	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	CPORT &= ~((1 << LCDE)|(1 << LCDRS));
 	CPORT |= 1 << LCDRW;
-	_delay_ms(1);
+	_delay_us(125);
 	CPORT |= 1 << LCDE;
-	_delay_ms(1);
+	_delay_us(125);
 	CPORT &= ~(1 << LCDE);
-	//_delay_ms(2);
 	return (DPIN&(1 << 7)) == 0 ? 1 : 0;
-// 	if ((DPIN & (1 << 7)) == 0)
-// 	return 1;
-// 	return 0;
 }
 
 void LcdWriteData(uint8_t cmd)
 {
 	while(LcdReady() == 0);
-	//_delay_ms(1);
 	DDDR = 255;
 	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	CPORT &= ~((1 << LCDE)|(1 << LCDRW));
 	CPORT |= 1 << LCDRS;
-	_delay_ms(1);
+	_delay_us(125);
 	CPORT |= 1 << LCDE;
-	//_delay_ms(1);
 	DPORT = cmd;
-	_delay_ms(1);
+	_delay_us(125);
 	CPORT &= ~(1 << LCDE);
-	//_delay_ms(1);
 }
 
 void LcdWriteCmd(uint8_t cmd)
 {
 	while(LcdReady() == 0);
-	//_delay_ms(1);
 	DDDR = 255;
 	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	CPORT &= ~((1 << LCDE)|(1 << LCDRW)|(1 << LCDRS));
-	_delay_ms(1);
+	_delay_us(125);
 	CPORT |= 1 << LCDE;
-	//_delay_ms(1);
 	DPORT = cmd;
-	_delay_ms(1);
+	_delay_us(125);
 	CPORT &= ~(1 << LCDE);
-	//_delay_ms(1);
 }
 
 void LcdInit()

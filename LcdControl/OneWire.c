@@ -5,12 +5,14 @@
 #define ONEWIRE_PULL_LOW()	{ ONEWIRE_DDR |= _BV(ONEWIRE_PN);  }
 #define ONEWIRE_LISTEN()	{ ONEWIRE_DDR &= ~_BV(ONEWIRE_PN); }
 
-// Returns 0 if the sensor is present, 1 otherwise
+// Setup of the one-wire pin
 void ow_init(void)
 {
 	ONEWIRE_PORT &= ~_BV(ONEWIRE_PN);
 	ONEWIRE_LISTEN()
 }
+
+// Returns 0 if the sensor is present, 1 otherwise
 
 uint8_t ow_reset(void)
 {
