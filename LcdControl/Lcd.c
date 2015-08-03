@@ -65,7 +65,16 @@ void LcdWrite(char * s)
 
 void LcdSetCursor(int row, int col)
 {
-	
+	uint8_t i;
+	LcdWriteCmd(0b00000010); // return home
+	if(row == 1){
+		row = 2;
+	} else if(row == 2){
+		row = 1;
+	}
+	for(i = 0; i < col + row * 20 ; i++){
+		LcdWriteCmd(0b00010100); // move cursor right
+	}	
 }
 
 void LcdClear()

@@ -9,15 +9,23 @@ void TermInit(void)
 	ow_init();
 }
 
-
-uint8_t TermRead(void)
+void TermConvert()
 {
+	cli();
 	ow_reset();
 	ow_write(CMD_SKIP_ROM);
 	ow_write(CMD_CONVERT);
-	_delay_ms(100);
+	sei();
+}
+
+// To be rewritten
+
+uint8_t TermRead(void)
+{
+	cli();
 	ow_reset();
 	ow_write(CMD_SKIP_ROM);
 	ow_write(CMD_READ_SCRATCHPAD);
 	return ow_read();
+	sei();
 }
