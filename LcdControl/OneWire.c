@@ -17,13 +17,11 @@ void ow_init(void)
 uint8_t ow_reset(void)
 {
 	uint8_t status;
-	cli();
 	ONEWIRE_PULL_LOW()
 	_delay_us(480);
 	ONEWIRE_LISTEN()
 	_delay_us(60);
 	status = ONEWIRE_BIT;
-	sei();
 	_delay_us(410);
 	return status;
 }
@@ -32,13 +30,11 @@ uint8_t ow_reset(void)
 uint8_t ow_read_bit(void)
 {
 	uint8_t bit;
-	cli();
 	ONEWIRE_PULL_LOW()
 	_delay_us(3);
 	ONEWIRE_LISTEN()
 	_delay_us(10);
 	bit = ONEWIRE_BIT;
-	sei();
 	_delay_us(53);
 	return bit;
 }
@@ -46,7 +42,6 @@ uint8_t ow_read_bit(void)
 // Write bit Function
 void ow_write_bit(uint8_t bit)
 {
-	cli();
 	ONEWIRE_PULL_LOW()
 	if (bit)
 	{
@@ -57,7 +52,6 @@ void ow_write_bit(uint8_t bit)
 		_delay_us(55);
 	}
 	ONEWIRE_LISTEN()
-	sei();
 	if (bit)
 	{
 		_delay_us(65);

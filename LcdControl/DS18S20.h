@@ -9,4 +9,6 @@ void TermInit(void);
 
 uint8_t TermRead(void);
 
+void TermConvert();
+
 #endif /* DS18S20_H_ */

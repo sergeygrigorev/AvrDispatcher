@@ -26,6 +26,7 @@ uint8_t TermRead(void)
 	ow_reset();
 	ow_write(CMD_SKIP_ROM);
 	ow_write(CMD_READ_SCRATCHPAD);
-	return ow_read();
+	uint8_t t = ow_read();
 	sei();
+	return t;
 }

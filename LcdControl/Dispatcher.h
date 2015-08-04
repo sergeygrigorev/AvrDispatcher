@@ -3,9 +3,8 @@
 
 // Configuration
 
-#define QUEUE_SIZE 32
-#define TIMER_QUEUE_SIZE 32
-#define DELAY_TABLE_SIZE 32
+#define QUEUE_SIZE 128
+#define TIMER_QUEUE_SIZE 64
 
 typedef void (*Task)(void);
 

@@ -68,7 +68,7 @@ void TaskManager()
 	}
 	cli();
 	Task t = queue[queueStart];
-	queueStart++;
+	queueStart = (queueStart+1)%QUEUE_SIZE;
 	sei();
 	(*t)();
 }
