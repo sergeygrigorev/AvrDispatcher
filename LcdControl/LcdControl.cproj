@@ -114,6 +114,12 @@
     <ExternalMakeFilePath>I:\Dev\AVR\LcdControl\LcdControl\Makefile</ExternalMakeFilePath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Can.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Can.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Dispatcher.c">
       <SubType>compile</SubType>
     </Compile>

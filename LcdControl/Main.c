@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include "DS18S20.h"
 #include "Dispatcher.h"
+#include "Can.h"
 
 
 uint8_t h = 0, m = 0, s = 0, temp = 0, tempDigit = 0;
@@ -121,6 +122,8 @@ void wdreset()
 
 int main(void)
 {
+	//uint8_t i = 0;
+	
 	LcdInit();
 	LcdWrite("********************");
 	LcdSetCursor(1, 0);
@@ -132,13 +135,38 @@ int main(void)
 	TermInit();
 	DDRD = 0xff;
 	PORTD = 0;
-	DspAddTask(&t0);
-	DspAddTask(&t2);
-	DspAddTask(&supatask);
-	DspAddTask(&termometer);
-	DspAddTask(&clock);
-	//DspAddTimerTask(&crash, 5000);
-	DspAddTask(&wdreset);
-	WDTCR = 0x1f;
-	DspInit();
+	
+	//UCSRB |= (1<<RXEN)|(1<<TXEN)|(0<<RXCIE)|(0<<TXCIE)|(0<<UDRIE);
+	//UCSRC |= (1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
+	//UBRRL = 51;
+	//UBRRH = 0;
+	
+	while(1)
+	{
+		//CanWrite(170);
+		//LcdWriteChar(i+'0');
+		//i++;
+		//i %= 10;
+		DDRD = 255;
+		PORTD = 255;
+		_delay_us(10);
+		//DDRD = 255;
+		PORTD = 0;
+		_delay_us(10);
+		
+	}
+	
+	
+	
+	
+	
+	//DspAddTask(&t0);
+	//DspAddTask(&t2);
+	//DspAddTask(&supatask);
+	//DspAddTask(&termometer);
+	//DspAddTask(&clock);
+	////DspAddTimerTask(&crash, 5000);
+	//DspAddTask(&wdreset);
+	//WDTCR = 0x1f;
+	//DspInit();
 }
