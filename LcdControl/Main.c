@@ -15,14 +15,25 @@
 #include "DS18S20.h"
 #include "Dispatcher.h"
 #include "Can.h"
+#include "SevenSeg.h"
 
 
-uint8_t h = 0, m = 0, s = 0, temp = 0, tempDigit = 0;
+uint8_t h = 0, m = 0, s = 0, temp = 0, tempDigit = 0, curr = 65, dot = 0;
 
 void t0();
 void t1();
 void t2();
 void t3();
+
+
+void counter()
+{
+	SevenSegWriteChar(curr, dot);
+	curr++;
+	if (curr == '[')
+		curr = 'A';
+	DspAddTimerTask(&counter, 500);
+}
 
 void t0()
 {
@@ -124,40 +135,51 @@ int main(void)
 {
 	//uint8_t i = 0;
 	
-	LcdInit();
-	LcdWrite("********************");
-	LcdSetCursor(1, 0);
-	LcdWrite("*     LALKA OS     *");
-	LcdSetCursor(2, 0);
-	LcdWrite("********************");
-	_delay_ms(1000);
-	LcdClear();
-	TermInit();
-	DDRD = 0xff;
-	PORTD = 0;
-	
+	//LcdInit();
+	//LcdWrite("********************");
+	//LcdSetCursor(1, 0);
+	//LcdWrite("*     LALKA OS     *");
+	//LcdSetCursor(2, 0);
+	//LcdWrite("********************");
+	//_delay_ms(1000);
+	//LcdClear();
+	//TermInit();
+	//DDRD = 0xff;
+	//PORTD = 0;
+	//
 	//UCSRB |= (1<<RXEN)|(1<<TXEN)|(0<<RXCIE)|(0<<TXCIE)|(0<<UDRIE);
 	//UCSRC |= (1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
 	//UBRRL = 51;
 	//UBRRH = 0;
 	
+	//DDRC = 255;
+	//PORTC = 254;
+		
+	SevenSegInit();
+	SevenSegWriteChar('H', 1);
+	
+	SevenSegWrite(('À' / 100) % 10, 0);
+		
+	//SevenSegWriteChar('D', 0);
+		
 	while(1)
 	{
 		//CanWrite(170);
 		//LcdWriteChar(i+'0');
 		//i++;
 		//i %= 10;
-		DDRD = 255;
-		PORTD = 255;
-		_delay_us(10);
 		//DDRD = 255;
-		PORTD = 0;
-		_delay_us(10);
+		//PORTD = 255;
+		//_delay_us(10);
+		////DDRD = 255;
+		//PORTD = 0;
+		//_delay_us(10);
 		
 	}
 	
 	
-	
+	DspAddTask(&counter);
+	DspInit();
 	
 	
 	//DspAddTask(&t0);

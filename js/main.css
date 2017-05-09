@@ -1,0 +1,25 @@
+table{
+	margin: auto;
+	padding: 0;
+
+}
+
+td {
+	border: 1px solid black;
+	margin: 2px;
+	padding: 0;
+}
+
+.horizontal {
+	height: 50px;
+	width: 250px;
+}
+
+.vertical {
+	height: 250px;
+	width: 50px;	
+}
+
+.selected {
+	background-color: green;
+}
