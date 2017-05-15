@@ -24,6 +24,11 @@ void write(uint8_t val, uint8_t write_dot, uint8_t* map)
 	PORT = res;
 }
 
+void SevenSegClear()
+{
+	PORT = COMMON_ANODE ? 255 : 0;
+}
+
 void SevenSegWrite(uint8_t val, uint8_t write_dot)
 {
 	write(val, write_dot, mapper);

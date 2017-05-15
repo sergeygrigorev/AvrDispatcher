@@ -7,14 +7,14 @@
 #define TIMER_QUEUE_SIZE 64
 
 typedef void (*Task)(void);
+typedef uint8_t (*ErrorHandler)(void);
 
 void DspInit();
+void DspStart();
 void DspAddTask(Task t);
 void DspClearQueue();
 void DspAddTimerTask(Task t, uint16_t delay);
 void DspClearTimerQueue();
-void DspDelayMs(uint16_t delay);
-void DspAllowTimerTasks();
 
 
 #endif /* DISPATCHER_H_ */

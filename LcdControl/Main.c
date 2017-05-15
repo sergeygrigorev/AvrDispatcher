@@ -28,7 +28,7 @@ void t3();
 
 void counter()
 {
-	SevenSegWriteChar(curr, dot);
+	SevenSegWrite(curr, dot);
 	curr++;
 	if (curr == '[')
 		curr = 'A';
@@ -63,29 +63,22 @@ void t3()
 	DspAddTimerTask(&t2,3000);
 }
 
-void crash()
+void d3()
 {
-	DspDelayMs(10);
-	DspAddTask(&crash);
+	SevenSegWrite(tempDigit, 0);
+	DspAddTimerTask(&SevenSegClear, 500);
 }
 
-void supatask()
+void d2()
 {
-	LcdSetCursor(2,0);
-	LcdWrite("0");
-	DspDelayMs(1000);
-	LcdSetCursor(2,0);
-	LcdWrite("1");
-	DspAddTimerTask(&supatask, 1000);
+	SevenSegWrite(temp % 10, 0);
+	DspAddTimerTask(&d3, 500);
 }
 
-
-void UpdateLcd()
+void d1()
 {
-	LcdSetCursor(3, 0);
-	char str[21];
-	sprintf(str, "%d.%d C      %02d:%02d:%02d", temp, tempDigit, h, m, s);
-	LcdWrite(str);
+	SevenSegWrite(temp / 10, 0);
+	DspAddTimerTask(&d2, 500);
 }
 
 void termRead()
@@ -93,14 +86,14 @@ void termRead()
 	temp = TermRead();
 	tempDigit = 5*(temp&1);
 	temp >>= 1;
-	DspAddTask(&UpdateLcd);
+	DspAddTask(&d1);
 }
 
 void termConv()
 {
 	TermConvert();
 	DspAddTimerTask(&termRead, 780);
-	DspAddTimerTask(&termConv, 2000);
+	DspAddTimerTask(&termConv, 3000);
 }
 
 void termometer()
@@ -108,27 +101,16 @@ void termometer()
 	DspAddTask(&termConv);
 }
 
-void clock()
-{ 
-	DspAddTimerTask(&clock, 1000);
-	s++;
-	if (s == 60)
-	{
-		s = 0;
-		m++;
-	}
-	if (m == 60)
-	{
-		m = 0;
-		h++;
-	}
-	DspAddTask(&UpdateLcd);
-}
-
 void wdreset()
 {
 	wdt_reset();
 	DspAddTimerTask(&wdreset, 100);
+}
+
+uint8_t onError()
+{
+	SevenSegWrite(8, 1);
+	while(1);
 }
 
 int main(void)
@@ -156,32 +138,14 @@ int main(void)
 	//PORTC = 254;
 		
 	SevenSegInit();
-	SevenSegWriteChar('H', 1);
-	
-	SevenSegWrite(('À' / 100) % 10, 0);
+	TermInit();
 		
 	//SevenSegWriteChar('D', 0);
 		
-	while(1)
-	{
-		//CanWrite(170);
-		//LcdWriteChar(i+'0');
-		//i++;
-		//i %= 10;
-		//DDRD = 255;
-		//PORTD = 255;
-		//_delay_us(10);
-		////DDRD = 255;
-		//PORTD = 0;
-		//_delay_us(10);
+	DspInit(&onError);
+	termometer();
+	DspStart();
 		
-	}
-	
-	
-	DspAddTask(&counter);
-	DspInit();
-	
-	
 	//DspAddTask(&t0);
 	//DspAddTask(&t2);
 	//DspAddTask(&supatask);

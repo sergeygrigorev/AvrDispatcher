@@ -1,7 +1,7 @@
 
 #include "OneWire.h"
 
-#define ONEWIRE_BIT			(ONEWIRE_PIN & _BV(ONEWIRE_PN))
+#define ONEWIRE_BIT			((ONEWIRE_PIN & _BV(ONEWIRE_PN)) >> ONEWIRE_PN)
 #define ONEWIRE_PULL_LOW()	{ ONEWIRE_DDR |= _BV(ONEWIRE_PN);  }
 #define ONEWIRE_LISTEN()	{ ONEWIRE_DDR &= ~_BV(ONEWIRE_PN); }
 

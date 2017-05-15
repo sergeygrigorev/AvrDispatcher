@@ -26,7 +26,7 @@
 #define DP 7 
 
 void SevenSegInit();
-void write(uint8_t val, uint8_t write_dot, uint8_t* map);
+void SevenSegClear();
 void SevenSegWrite(uint8_t val, uint8_t write_dot);
 void SevenSegWriteChar(uint8_t val, uint8_t write_dot);
 
