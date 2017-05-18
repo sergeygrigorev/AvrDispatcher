@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/wdt.h>
 #include "Dispatcher.h"
 
 #define PRESCALER 64
@@ -30,6 +31,7 @@ ISR(TIMER0_COMP_vect)
 void DecreaseCounters()
 {
 	uint8_t i;
+	
 	for(i=0;i<timerQueueSize;i++)
 	{
 		if(timerQueue[i].delay == 0)
@@ -45,6 +47,8 @@ void DecreaseCounters()
 
 void TaskManager()
 {
+	wdt_reset();
+	
 	while (ticks)
 	{
 		DecreaseCounters();
@@ -58,7 +62,7 @@ void TaskManager()
 	
 	Task t = queue[queueStart++];
 	queueStart = queueStart % QUEUE_SIZE;
-	(*t)();
+	t();
 }
 
 void DspInit(ErrorHandler onError)
@@ -68,6 +72,7 @@ void DspInit(ErrorHandler onError)
 	TCCR0 = _BV(CS00) | _BV(CS01) | _BV(WGM01); // Prescaler = 64, CTC mode
 	
 	errorHandler = onError;
+	//WDTCR = 0x1f;
 	
 	sei();
 }
@@ -80,6 +85,10 @@ void DspStart()
 
 void DspAddTask(Task t)
 {
+	if ((queueEnd + 1) % QUEUE_SIZE == queueStart)
+		if (errorHandler())
+			return;
+			
 	queue[queueEnd++] = t;
 	queueEnd %= QUEUE_SIZE;
 }
@@ -92,7 +101,7 @@ void DspClearQueue()
 void DspAddTimerTask(Task t, uint16_t delay)
 {
 	if(timerQueueSize == TIMER_QUEUE_SIZE)
-		if ((*errorHandler)())
+		if (errorHandler())
 			return;
 	
 	timerQueue[timerQueueSize].task = t;

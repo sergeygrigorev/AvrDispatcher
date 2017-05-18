@@ -44,26 +44,18 @@ void ow_write_bit(uint8_t bit)
 {
 	ONEWIRE_PULL_LOW()
 	if (bit)
-	{
 		_delay_us(10);
-	}
 	else
-	{
 		_delay_us(55);
-	}
 	ONEWIRE_LISTEN()
 	if (bit)
-	{
-		_delay_us(65);
-	}
+		_delay_us(60);
 	else
-	{
 		_delay_us(5);
-	}
 }
 
 // Read BYTE Function
-uint8_t ow_read(void)
+uint8_t ow_read_byte(void)
 {
 	uint8_t byte = 0;
 	uint8_t i;
@@ -71,23 +63,26 @@ uint8_t ow_read(void)
 	{
 		byte >>= 1;
 		if (ow_read_bit())
-		{
 			byte |= 0x80;
-		}
 	}
 	return byte;
 }
 
 // Write BYTE Function
-void ow_write(uint8_t byte)
+void ow_write_byte(uint8_t byte)
 {
 	uint8_t i;
-	uint8_t temp;
-
 	for (i = 0; i < 8; i++)
 	{
-		temp = byte >> i;
-		temp &= 1;
-		ow_write_bit(temp);
+		ow_write_bit(byte & 1);
+		byte >>= 1;
 	}
+}
+
+// Read n bytes to buf
+void ow_read_bytes(uint8_t* buf, uint8_t n)
+{
+	uint8_t i;	
+	for (i = 0; i < n; i++)
+		buf[i] = ow_read_byte();	
 }

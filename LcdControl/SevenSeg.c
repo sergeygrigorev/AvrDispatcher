@@ -2,13 +2,14 @@
 
 uint8_t letters[] = {119, 124, 57, 94, 121, 113, 61, 118, 48, 30, 0, 56, 0, 0, 63, 115, 103, 80, 109, 120, 62, 28, 0, 0, 110, 91};
 
-uint8_t mapper[] = {63, 6, 91, 79, 102, 109, 125, 7, 127, 111};
+uint8_t numbers[] = {63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113};
 
 uint8_t swapper[] = {A, B, C, D, E, F, G};
 
 void SevenSegInit()
 {
 	DDR = 255;
+	SevenSegClear();
 }
 
 void write(uint8_t val, uint8_t write_dot, uint8_t* map)
@@ -31,7 +32,7 @@ void SevenSegClear()
 
 void SevenSegWrite(uint8_t val, uint8_t write_dot)
 {
-	write(val, write_dot, mapper);
+	write(val, write_dot, numbers);
 }
 
 void SevenSegWriteChar(uint8_t val, uint8_t write_dot)

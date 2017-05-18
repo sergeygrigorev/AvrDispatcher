@@ -23,9 +23,12 @@ uint8_t ow_read_bit(void);
 void ow_write_bit(uint8_t bit);
 
 // Read a byte
-uint8_t ow_read(void);
+uint8_t ow_read_byte(void);
 
 // Write a byte
-void ow_write(uint8_t byte);
+void ow_write_byte(uint8_t byte);
+
+// Read n bytes
+void ow_read_bytes(uint8_t* buf, uint8_t n);
 
 #endif

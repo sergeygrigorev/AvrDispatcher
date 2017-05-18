@@ -18,87 +18,68 @@
 #include "SevenSeg.h"
 
 
-uint8_t h = 0, m = 0, s = 0, temp = 0, tempDigit = 0, curr = 65, dot = 0;
-
-void t0();
-void t1();
-void t2();
-void t3();
-
-
-void counter()
-{
-	SevenSegWrite(curr, dot);
-	curr++;
-	if (curr == '[')
-		curr = 'A';
-	DspAddTimerTask(&counter, 500);
-}
-
-void t0()
-{
-	LcdSetCursor(0,0);
-	LcdWrite("0");
-	DspAddTimerTask(&t1,500);
-}
-
-void t1()
-{
-	LcdSetCursor(0,0);
-	LcdWrite("1");
-	DspAddTimerTask(&t0,500);
-}
-
-void t2()
-{
-	LcdSetCursor(1,0);
-	LcdWrite("0");
-	DspAddTimerTask(&t3,3000);
-}
-
-void t3()
-{
-	LcdSetCursor(1,0);
-	LcdWrite("1");
-	DspAddTimerTask(&t2,3000);
-}
+uint8_t temp = 0, tempDigit = 0, idx = 16;
+uint8_t data[8];
 
 void d3()
 {
 	SevenSegWrite(tempDigit, 0);
-	DspAddTimerTask(&SevenSegClear, 500);
+	DspAddTimerTask(SevenSegClear, 500);
 }
 
 void d2()
 {
 	SevenSegWrite(temp % 10, 0);
-	DspAddTimerTask(&d3, 500);
+	DspAddTimerTask(d3, 500);
 }
 
 void d1()
 {
 	SevenSegWrite(temp / 10, 0);
-	DspAddTimerTask(&d2, 500);
+	DspAddTimerTask(d2, 500);
+}
+
+void d0()
+{
+	SevenSegWriteChar('T', 0);
+	DspAddTimerTask(d1, 500);
+}
+
+void quad()
+{
+	uint8_t i, j;
+	idx--;
+	i = idx >> 1;
+	j = idx & 1;
+	
+	SevenSegWrite((data[7-i] >> (4 * j)) & 0xf, idx & 1);
+	if (idx)
+		DspAddTimerTask(quad, 500);
+	else {
+		DspAddTimerTask(SevenSegClear, 500);
+		DspAddTimerTask(quad, 1000);
+		idx = 16;
+	}
 }
 
 void termRead()
 {
-	temp = TermRead();
+	temp = TermReadTemp();
 	tempDigit = 5*(temp&1);
 	temp >>= 1;
-	DspAddTask(&d1);
+	DspAddTask(d0);
 }
 
 void termConv()
 {
 	TermConvert();
-	DspAddTimerTask(&termRead, 780);
-	DspAddTimerTask(&termConv, 3000);
+	DspAddTimerTask(termRead, 780);
+	DspAddTimerTask(termConv, 3500);
 }
 
 void termometer()
 {
-	DspAddTask(&termConv);
+	DspAddTask(termConv);
 }
 
 void wdreset()
@@ -140,10 +121,16 @@ int main(void)
 	SevenSegInit();
 	TermInit();
 		
+	//TermReadROM(data);
+	
+	//DspAddTask(quad);
+	
+		
 	//SevenSegWriteChar('D', 0);
 		
-	DspInit(&onError);
+	DspInit(onError);
 	termometer();
+	//WDTCR = 0x1f;
 	DspStart();
 		
 	//DspAddTask(&t0);
@@ -153,6 +140,6 @@ int main(void)
 	//DspAddTask(&clock);
 	////DspAddTimerTask(&crash, 5000);
 	//DspAddTask(&wdreset);
-	//WDTCR = 0x1f;
+	
 	//DspInit();
 }
