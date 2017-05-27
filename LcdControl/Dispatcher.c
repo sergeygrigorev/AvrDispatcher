@@ -1,6 +1,3 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/wdt.h>
 #include "Dispatcher.h"
 
 typedef struct
@@ -63,13 +60,27 @@ void TaskManager()
 
 void DspInit(ErrorHandler onError)
 {
+	// put number into comparison register
 	OCR0 = TIMER_COMP_NUMBER;
-	TIMSK |= _BV(OCIE0);
+	
 	// set bits according to selected prescaler
-	TCCR0 = _BV(CS00) | _BV(CS01) | _BV(WGM01); // Prescaler = 64, CTC mode
+	//TCCR0 = (0 << CS02) | (0 << CS01) | (1 << CS00); // Prescaler = 1
+	//TCCR0 = (0 << CS02) | (1 << CS01) | (0 << CS00); // Prescaler = 8
+	TCCR0 = (0 << CS02) | (1 << CS01) | (1 << CS00); // Prescaler = 64
+	//TCCR0 = (1 << CS02) | (0 << CS01) | (0 << CS00); // Prescaler = 256
+	//TCCR0 = (1 << CS02) | (0 << CS01) | (1 << CS00); // Prescaler = 1024
+	
+	// CTC mode
+	TCCR0 |= (1 << WGM01);
+	
+	// enable Timer0 interrupt
+	TIMSK |= (1 << OCIE0);
 	
 	errorHandler = onError;
-	WDTCR = 0x1f;
+	
+	// enable watchdog, tick each second
+	WDTCR = 0xe;
+	// to disable, or 0x18, then you have 4 cycles to and 0xf7
 }
 
 void DspStart()
