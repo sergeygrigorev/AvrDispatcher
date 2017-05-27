@@ -8,7 +8,7 @@ uint8_t swapper[] = {A, B, C, D, E, F, G};
 
 void SevenSegInit()
 {
-	DDR = 255;
+	SEVEN_SEG_DDR = 255;
 	SevenSegClear();
 }
 
@@ -22,12 +22,12 @@ void write(uint8_t val, uint8_t write_dot, uint8_t* map)
 		res |= 1 << DP;
 	if (COMMON_ANODE)
 		res = ~res;
-	PORT = res;
+	SEVEN_SEG_PORT = res;
 }
 
 void SevenSegClear()
 {
-	PORT = COMMON_ANODE ? 255 : 0;
+	SEVEN_SEG_PORT = COMMON_ANODE ? 255 : 0;
 }
 
 void SevenSegWrite(uint8_t val, uint8_t write_dot)

@@ -4,7 +4,7 @@
 #define ONEWIRE_PORT		PORTB
 #define ONEWIRE_PIN			PINB
 #define ONEWIRE_DDR			DDRB
-#define ONEWIRE_PN			0
+#define ONEWIRE_BIT			0
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -30,5 +30,8 @@ void ow_write_byte(uint8_t byte);
 
 // Read n bytes
 void ow_read_bytes(uint8_t* buf, uint8_t n);
+
+// search devices
+uint8_t ow_search(uint8_t* addr, uint8_t last_descrepancy);
 
 #endif

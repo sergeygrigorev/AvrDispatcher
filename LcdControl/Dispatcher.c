@@ -3,10 +3,6 @@
 #include <avr/wdt.h>
 #include "Dispatcher.h"
 
-#define PRESCALER 64
-
-#define TIMER_COMP_NUMBER (F_CPU/1000/PRESCALER) // 1000 because we need timer to interrupt once a millisecond = 1/1000 of the second
-
 typedef struct
 {
 	Task task;
@@ -69,16 +65,16 @@ void DspInit(ErrorHandler onError)
 {
 	OCR0 = TIMER_COMP_NUMBER;
 	TIMSK |= _BV(OCIE0);
+	// set bits according to selected prescaler
 	TCCR0 = _BV(CS00) | _BV(CS01) | _BV(WGM01); // Prescaler = 64, CTC mode
 	
 	errorHandler = onError;
-	//WDTCR = 0x1f;
-	
-	sei();
+	WDTCR = 0x1f;
 }
 
 void DspStart()
 {
+	sei();
 	while(1)
 		TaskManager();
 }

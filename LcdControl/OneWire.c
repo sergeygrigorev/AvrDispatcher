@@ -1,14 +1,14 @@
 
 #include "OneWire.h"
 
-#define ONEWIRE_BIT			((ONEWIRE_PIN & _BV(ONEWIRE_PN)) >> ONEWIRE_PN)
-#define ONEWIRE_PULL_LOW()	{ ONEWIRE_DDR |= _BV(ONEWIRE_PN);  }
-#define ONEWIRE_LISTEN()	{ ONEWIRE_DDR &= ~_BV(ONEWIRE_PN); }
+#define ONEWIRE_READ()			((ONEWIRE_PIN & _BV(ONEWIRE_BIT)) >> ONEWIRE_BIT)
+#define ONEWIRE_PULL_LOW()	{ ONEWIRE_DDR |= _BV(ONEWIRE_BIT); }
+#define ONEWIRE_LISTEN()	{ ONEWIRE_DDR &= ~_BV(ONEWIRE_BIT); }
 
 // Setup of the one-wire pin
 void ow_init(void)
 {
-	ONEWIRE_PORT &= ~_BV(ONEWIRE_PN);
+	ONEWIRE_PORT &= ~_BV(ONEWIRE_BIT);
 	ONEWIRE_LISTEN()
 }
 
@@ -21,7 +21,7 @@ uint8_t ow_reset(void)
 	_delay_us(480);
 	ONEWIRE_LISTEN()
 	_delay_us(60);
-	status = ONEWIRE_BIT;
+	status = ONEWIRE_READ();
 	_delay_us(410);
 	return status;
 }
@@ -34,7 +34,7 @@ uint8_t ow_read_bit(void)
 	_delay_us(3);
 	ONEWIRE_LISTEN()
 	_delay_us(10);
-	bit = ONEWIRE_BIT;
+	bit = ONEWIRE_READ();
 	_delay_us(53);
 	return bit;
 }
@@ -85,4 +85,10 @@ void ow_read_bytes(uint8_t* buf, uint8_t n)
 	uint8_t i;	
 	for (i = 0; i < n; i++)
 		buf[i] = ow_read_byte();	
+}
+
+// search procedure
+uint8_t ow_search(uint8_t* addr, uint8_t last_descrepancy)
+{
+	return last_descrepancy;
 }
