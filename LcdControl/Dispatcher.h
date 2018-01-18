@@ -13,6 +13,8 @@
 #define QUEUE_SIZE 32
 #define TIMER_QUEUE_SIZE 32
 
+// #define WATCHDOG
+
 typedef void (*Task)(void);
 typedef uint8_t (*ErrorHandler)(void);
 

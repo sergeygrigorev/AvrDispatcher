@@ -1,11 +1,3 @@
-/*
- * SevenSeg.h
- *
- * Created: 09.05.2017 20:16:02
- *  Author: Odmin
- */ 
-
-
 #ifndef SEVENSEG_H_
 #define SEVENSEG_H_
 

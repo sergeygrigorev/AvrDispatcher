@@ -27,6 +27,7 @@ void DecreaseCounters()
 	
 	for(i=0;i<timerQueueSize;i++)
 	{
+		// maybe it is better to compare with 1
 		if(timerQueue[i].delay == 0)
 		{
 			DspAddTask(timerQueue[i].task);
@@ -40,9 +41,11 @@ void DecreaseCounters()
 
 void TaskManager()
 {
+	#ifdef WATCHDOG
 	wdt_reset();
+	#endif
 	
-	while (ticks)
+	while (ticks > 0)
 	{
 		DecreaseCounters();
 		cli();
@@ -52,7 +55,7 @@ void TaskManager()
 	
 	if (queueEnd == queueStart)
 		return;
-	
+		
 	Task t = queue[queueStart++];
 	queueStart = queueStart % QUEUE_SIZE;
 	t();
@@ -78,9 +81,11 @@ void DspInit(ErrorHandler onError)
 	
 	errorHandler = onError;
 	
+	#ifdef WATCHDOG
 	// enable watchdog, tick each second
 	WDTCR = 0xe;
 	// to disable, or 0x18, then you have 4 cycles to and 0xf7
+	#endif
 }
 
 void DspStart()

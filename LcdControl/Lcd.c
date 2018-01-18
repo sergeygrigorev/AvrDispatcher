@@ -57,10 +57,7 @@ void LcdWrite(char * s)
 {
 	int i = 0;
 	while(s[i] != '\0')
-	{
-		LcdWriteChar(s[i]);
-		i++;
-	}
+		LcdWriteChar(s[i++]);
 }
 
 void LcdSetCursor(int row, int col)

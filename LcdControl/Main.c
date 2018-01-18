@@ -1,11 +1,12 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/wdt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "Dispatcher.h"
 #include "SevenSeg.h"
 #include "Button.h"
+#include "Lcd.h"
+#include "UART.h"
 
 #define PORT_LEFT PORTD
 #define PORT_RIGHT PORTA
@@ -16,11 +17,12 @@
 
 uint8_t onError()
 {
-	SevenSegWrite(8, 1);
+	LcdWrite("Error");
 	while(1);
+	return 0;
 }
 
-uint8_t pos = 0, seg_light = 0, t = 0;
+uint8_t pos = 0, seg_light = 0, t = 0, x = 'a';
 Button b;
 
 void update_segment()
@@ -79,24 +81,74 @@ void init_buttons()
 
 void init()
 {
-	SevenSegInit();
-	DDR_LEFT |= 1 << 7;
-	DDR_RIGHT |= 1 << 7;
-	PORT_LEFT |= 1 << 7;
-	
+	//SevenSegInit();
+	//DDR_LEFT |= 1 << 7;
+	//DDR_RIGHT |= 1 << 7;
+	//PORT_LEFT |= 1 << 7;
+		
+	UartInit();
+	LcdInit();
 	DspInit(onError);
+		
+	//init_buttons();
+}
+
+void a()
+{
+	if (x > 'z')
+		x = 'a';
+	LcdWriteChar(x);
+	UartWrite(x);
+	x++;
+	DspAddTimerTask(a, 200);
+}
+
+void ab()
+{
+	uint8_t xxx = UartRead();
+	switch(xxx)
+	{
+		case 'c':
+			LcdClear();
+			break;
+		case 'n':
+			LcdWrite("NIGGA");
+			break;
+		default:
+			LcdWriteChar(xxx);
+	}
 	
-	init_buttons();
+	//LcdClear();
+	//LcdWriteChar(xxx);
+	//UartWrite(xxx);
+	//UartWrite('\n');
+	DspAddTimerTask(ab, 0);
 }
 
 int main(void)
 {
 	init();
-	
-	DspAddTask(button_check);
-	DspAddTask(update_segment);
-	DspAddTask(tick);
-	DspAddTask(check_btn);
 		
+	//LcdWrite("Hello");
+	//LcdWrite("World");
+	
+	//_delay_ms(300);
+	LcdWrite("1234567890");
+	LcdSetCursor(1, 0);
+	//LcdWrite("1234567890");
+	//LcdSetCursor(2, 0);
+	//LcdWrite("1234567890");
+	//LcdSetCursor(3, 0);
+	//LcdWrite("1234567890");
+	//_delay_ms(500);
+	
+	DspAddTask(ab);
+	
 	DspStart();
+	
+	while(1)
+	{
+		a();
+		_delay_ms(200);
+	}		
 }

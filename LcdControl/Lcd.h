@@ -1,12 +1,13 @@
 #ifndef LCD_H_
 #define LCD_H_
 
-#define LCDE 0 // E pin
-#define LCDRS 1 // RS pin
-#define LCDRW 2 // RW pin
-#define CPORT PORTA // Command port
+#define LCDRS 5 // RS pin
+#define LCDRW 6 // RW pin
+#define LCDE 7 // E pin
+#define CPORT PORTD // Command port
+#define CDDR DDRD // Command DDR
+
 #define DPORT PORTC // Data port
-#define CDDR DDRA // Command DDR
 #define DDDR DDRC // Data DDR
 #define DPIN PINC // Data PIN
 
