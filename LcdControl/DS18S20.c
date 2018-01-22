@@ -23,29 +23,28 @@
 
 uint8_t arr[MAX_CMD_LENGTH];
 
-void TermInit(void)
+void term_init(void)
 {
 	ow_init();
 }
 
-void TermConvert()
+void term_convert(uint8_t* addr)
 {
 	ow_reset();
-	ow_write_byte(CMD_SKIP_ROM);
+	if (addr == 0)
+		ow_write_byte(CMD_SKIP_ROM);
+	else
+		ow_match_rom(addr);
 	ow_write_byte(CMD_CONVERT);
 }
 
-void TermReadROM(uint8_t* buf)
+uint8_t term_read_temp(uint8_t* addr)
 {
 	ow_reset();
-	ow_write_byte(CMD_READ_ROM);
-	ow_read_bytes(buf, 8);
-}
-
-uint8_t TermReadTemp()
-{
-	ow_reset();
-	ow_write_byte(CMD_SKIP_ROM);
+	if (addr == 0)
+		ow_write_byte(CMD_SKIP_ROM);
+	else
+		ow_match_rom(addr);
 	ow_write_byte(CMD_READ_SCRATCHPAD);
 	ow_read_bytes(arr, 9);
 	return arr[0];

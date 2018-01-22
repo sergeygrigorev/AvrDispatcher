@@ -1,6 +1,8 @@
 #include "UART.h"
 
-void UartInit()
+#define BAUD (F_CPU/16/BAUDRATE-1)
+
+void uart_init()
 {
 	UCSRA = 0;
 	UCSRB = (1<<RXEN)|(1<<TXEN);
@@ -9,7 +11,7 @@ void UartInit()
 	UBRRH = BAUD >> 8;
 }
 
-void UartWrite(uint8_t bt)
+void uart_write(uint8_t bt)
 {
 	// Wait until last byte has been transmitted
 	while( !(UCSRA & (1 << UDRE)) );
@@ -18,7 +20,7 @@ void UartWrite(uint8_t bt)
 	UDR = bt;
 }
 
-uint8_t UartRead()
+uint8_t uart_read()
 {
 	// Wait for data to be received
 	while ( !(UCSRA & (1 << RXC)) );

@@ -1,6 +1,6 @@
 #include "Lcd.h"
 
-uint8_t LcdReady()
+uint8_t lcd_ready()
 {
 	DDDR = 0;
 	DPORT = 255;
@@ -13,9 +13,9 @@ uint8_t LcdReady()
 	return (DPIN&(1 << 7)) == 0 ? 1 : 0;
 }
 
-void LcdWriteData(uint8_t cmd)
+void lcd_write_data(uint8_t cmd)
 {
-	while(LcdReady() == 0);
+	while(lcd_ready() == 0);
 	DDDR = 255;
 	CPORT &= ~((1 << LCDE)|(1 << LCDRW));
 	CPORT |= 1 << LCDRS;
@@ -26,9 +26,9 @@ void LcdWriteData(uint8_t cmd)
 	CPORT &= ~(1 << LCDE);
 }
 
-void LcdWriteCmd(uint8_t cmd)
+void lcd_write_cmd(uint8_t cmd)
 {
-	while(LcdReady() == 0);
+	while(lcd_ready() == 0);
 	DDDR = 255;
 	CPORT &= ~((1 << LCDE)|(1 << LCDRW)|(1 << LCDRS));
 	_delay_us(125);
@@ -38,44 +38,44 @@ void LcdWriteCmd(uint8_t cmd)
 	CPORT &= ~(1 << LCDE);
 }
 
-void LcdInit()
+void lcd_init()
 {
 	CDDR |= (1 << LCDE)|(1 << LCDRW)|(1 << LCDRS);
 	
-	LcdWriteCmd(0b00111000); // 8-bit, 2 lines, 5x8
-	LcdWriteCmd(0b00000010); // Start position
-	LcdWriteCmd(0b00000001); // Clear
-	LcdWriteCmd(0b00001100); // Enable, no cursor
+	lcd_write_cmd(0b00111000); // 8-bit, 2 lines, 5x8
+	lcd_write_cmd(0b00000010); // Start position
+	lcd_write_cmd(0b00000001); // Clear
+	lcd_write_cmd(0b00001100); // Enable, no cursor
 }
 
-void LcdWriteChar(char c)
+void lcd_write_char(char c)
 {
-	LcdWriteData(c);
+	lcd_write_data(c);
 }
 
-void LcdWrite(char * s)
+void lcd_write(char * s)
 {
 	int i = 0;
 	while(s[i] != '\0')
-		LcdWriteChar(s[i++]);
+		lcd_write_char(s[i++]);
 }
 
-void LcdSetCursor(int row, int col)
+void lcd_set_cursor(int row, int col)
 {
 	uint8_t i;
-	LcdWriteCmd(0b00000010); // return home
+	lcd_write_cmd(0b00000010); // return home
 	if(row == 1){
 		row = 2;
 	} else if(row == 2){
 		row = 1;
 	}
 	for(i = 0; i < col + row * 20 ; i++){
-		LcdWriteCmd(0b00010100); // move cursor right
+		lcd_write_cmd(0b00010100); // move cursor right
 	}	
 }
 
-void LcdClear()
+void lcd_clear()
 {
-	LcdWriteCmd(0b00000010);
-	LcdWriteCmd(0b00000001);
+	lcd_write_cmd(0b00000010);
+	lcd_write_cmd(0b00000001);
 }

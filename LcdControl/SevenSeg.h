@@ -17,9 +17,9 @@
 #define G 7
 #define DP 5
 
-void SevenSegInit();
-void SevenSegClear();
-void SevenSegWrite(uint8_t val, uint8_t write_dot);
-void SevenSegWriteChar(uint8_t val, uint8_t write_dot);
+void seven_seg_init();
+void seven_seg_clear();
+void seven_seg_write_number(uint8_t val, uint8_t write_dot);
+void seven_seg_write_char(uint8_t val, uint8_t write_dot);
 
 #endif /* SEVENSEG_H_ */

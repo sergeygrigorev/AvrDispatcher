@@ -6,10 +6,8 @@
 
 #define BAUDRATE 9600
 
-#define BAUD (F_CPU/16/BAUDRATE-1)
-
-void UartInit();
-void UartWrite(uint8_t byte);
-uint8_t UartRead();
+void uart_init();
+void uart_write(uint8_t byte);
+uint8_t uart_read();
 
 #endif /* UART_H_ */

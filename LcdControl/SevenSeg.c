@@ -6,13 +6,13 @@ uint8_t numbers[] = {63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94
 
 uint8_t swapper[] = {A, B, C, D, E, F, G};
 
-void SevenSegInit()
+void seven_seg_init()
 {
 	SEVEN_SEG_DDR = 255;
-	SevenSegClear();
+	seven_seg_clear();
 }
 
-void write(uint8_t val, uint8_t write_dot, uint8_t* map)
+void _seven_seg_write(uint8_t val, uint8_t write_dot, uint8_t* map)
 {
 	uint8_t res = 0;
 	uint8_t i;
@@ -25,17 +25,17 @@ void write(uint8_t val, uint8_t write_dot, uint8_t* map)
 	SEVEN_SEG_PORT = res;
 }
 
-void SevenSegClear()
+void seven_seg_clear()
 {
 	SEVEN_SEG_PORT = COMMON_ANODE ? 255 : 0;
 }
 
-void SevenSegWrite(uint8_t val, uint8_t write_dot)
+void seven_seg_write_number(uint8_t val, uint8_t write_dot)
 {
-	write(val, write_dot, numbers);
+	_seven_seg_write(val, write_dot, numbers);
 }
 
-void SevenSegWriteChar(uint8_t val, uint8_t write_dot)
+void seven_seg_write_char(uint8_t val, uint8_t write_dot)
 {
-	write(val - 'A', write_dot, letters);
+	_seven_seg_write(val - 'A', write_dot, letters);
 }

@@ -14,12 +14,12 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-void LcdWriteData(uint8_t cmd);
-void LcdWriteCmd(uint8_t cmd);
-void LcdInit();
-void LcdWriteChar(char c);
-void LcdWrite(char * s);
-void LcdSetCursor(int row, int col);
-void LcdClear();
+void lcd_init();
+void lcd_write_data(uint8_t cmd);
+void lcd_write_cmd(uint8_t cmd);
+void lcd_write_char(char c);
+void lcd_write(char * s);
+void lcd_set_cursor(int row, int col);
+void lcd_clear();
 
 #endif /* LCD_H_ */

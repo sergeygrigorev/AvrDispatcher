@@ -5,12 +5,10 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-void TermInit(void);
+void term_init(void);
 
-void TermConvert();
+void term_convert(uint8_t* addr);
 
-void TermReadROM(uint8_t* buf);
-
-uint8_t TermReadTemp();
+uint8_t term_read_temp(uint8_t* addr);
 
 #endif /* DS18S20_H_ */
